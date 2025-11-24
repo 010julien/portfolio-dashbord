@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { skillsApi, uploadApi } from '../lib/api'
+import { skillsApi, uploadApi, resolveAssetUrl } from '../lib/api'
 import { Upload, X } from 'lucide-react'
 
 const SkillForm = ({ skill, onClose }) => {
@@ -165,7 +165,7 @@ const SkillForm = ({ skill, onClose }) => {
           {previewUrl && (
             <div className="relative">
               <img
-                src={previewUrl}
+                src={previewUrl.startsWith('data:') ? previewUrl : resolveAssetUrl(previewUrl)}
                 alt="Preview"
                 className="w-20 h-20 object-contain rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-2"
               />

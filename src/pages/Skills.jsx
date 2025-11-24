@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { skillsApi } from '../lib/api'
+import { skillsApi, resolveAssetUrl } from '../lib/api'
 import { Plus, Edit, Trash2, X } from 'lucide-react'
 import SkillForm from '../components/SkillForm'
 
@@ -110,7 +110,7 @@ const Skills = () => {
                     <div className="flex items-center gap-3 flex-1">
                       {skill.icon && (
                         <img
-                          src={skill.icon}
+                          src={resolveAssetUrl(skill.icon)}
                           alt={skill.name}
                           className="w-10 h-10 object-contain"
                         />

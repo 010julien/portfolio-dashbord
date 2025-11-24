@@ -1,13 +1,23 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL; // ex: https://portfolio-backend.onrender.com
+const RAW_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+export const API_URL = RAW_API_URL.replace(/\/+$/, '').replace(/\/api$/, ''); // ex: https://portfolio-backend.onrender.com
 
 export const api = axios.create({
-  baseURL: `${API_URL}/api`,
+  baseURL: `${API_URL}`,
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+export const resolveAssetUrl = (url) => {
+  if (!url) return url;
+  const base = (API_URL || '').replace(/\/+$/, '');
+  const replaced = url.replace('http://localhost:3001', base);
+  if (/^https?:\/\//i.test(replaced)) return replaced;
+  if (replaced.startsWith('/')) return `${base}${replaced}`;
+  return `${base}/${replaced}`;
+};
 
 // Projects API
 export const projectsApi = {
@@ -20,19 +30,19 @@ export const projectsApi = {
 
 // Skills API
 export const skillsApi = {
-  getAll: () => api.get("/skills"),
-  getById: (id) => api.get(`/skills/${id}`),
-  getByCategories: () => api.get("/skills/by-categories"),
-  create: (data) => api.post("/skills", data),
-  update: (id, data) => api.patch(`/skills/${id}`, data),
-  delete: (id) => api.delete(`/skills/${id}`),
+  getAll: () => api.get("/api/skills"),
+  getById: (id) => api.get(`/api/skills/${id}`),
+  getByCategories: () => api.get("/api/skills/by-categories"),
+  create: (data) => api.post("/api/skills", data),
+  update: (id, data) => api.patch(`/api/skills/${id}`, data),
+  delete: (id) => api.delete(`/api/skills/${id}`),
 };
 
 // Dashboard API
 export const dashboardApi = {
-  getStats: () => api.get("/dashboard/stats"),
-  getTimeline: () => api.get("/dashboard/timeline"),
-  getRecentActivity: () => api.get("/dashboard/recent-activity"),
+  getStats: () => api.get("/api/dashboard/stats"),
+  getTimeline: () => api.get("/api/dashboard/timeline"),
+  getRecentActivity: () => api.get("/api/dashboard/recent-activity"),
 };
 
 // Upload API
@@ -40,7 +50,7 @@ export const uploadApi = {
   uploadSkillIcon: (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    return api.post("/upload/skill-icon", formData, {
+    return api.post("/api/upload/skill-icon", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -49,7 +59,7 @@ export const uploadApi = {
   uploadProjectIcon: (file) => {
     const formData = new FormData();
     formData.append("file", file);
-    return api.post("/upload/project-icon", formData, {
+    return api.post("/api/upload/project-icon", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
